@@ -1,0 +1,35 @@
+version: "2.1"
+services:
+  calibre-web:
+    image: lscr.io/linuxserver/calibre-web:latest
+    container_name: calibre-web
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+      - DOCKER_MODS=linuxserver/mods:universal-calibre #optional
+      - OAUTHLIB_RELAX_TOKEN_SCOPE=1 #optional
+      - CREATE_NEW_DATABASE=true
+    volumes:
+      - /home/jabadurai/myfiles/calibre/data:/config
+      - /home/jabadurai/myfiles/calibre/library:/books
+    ports:
+      - 9083:8083
+    restart: unless-stopped
+  calibre:
+    image: lscr.io/linuxserver/calibre:latest
+    container_name: calibre
+    security_opt:
+      - seccomp:unconfined #optional
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Chicago
+    volumes:
+      - /home/jabadurai/myfiles/calibre/data:/config
+      - /home/jabadurai/myfiles/calibre/library:/books
+      - /home/jabadurai/myfiles/uploads-staging/ebooks:/books-import
+    ports:
+      - 9080:8080
+      - 9081:8081
+    restart: unless-stopped
